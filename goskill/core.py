@@ -6,20 +6,7 @@ import time
 from typing import Dict, Any, Callable, Optional
 from datetime import datetime, timedelta
 
-
-class Criteria:
-    """Success criteria for a GoSkill task."""
-    
-    def __init__(self, **kwargs):
-        self.criteria = kwargs
-    
-    def check(self, result: Any) -> bool:
-        """Check if result meets all criteria."""
-        # TODO: Implement actual criteria checking
-        return True
-    
-    def __repr__(self):
-        return f"Criteria({self.criteria})"
+from .criteria import Criteria
 
 
 class GoSkill:

@@ -1,12 +1,34 @@
+<div align="center">
+
 # GoSkill
 
+**让一个任务围绕目标和成功标准持续推进，而不是做一轮就停。**
+
 [![PyPI](https://img.shields.io/badge/pypi-v1.0.0-blue)](https://pypi.org/project/goskill/)
-[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](https://github.com/AIPMAndy/goskill/blob/main/LICENSE)
+[![Tests](https://github.com/AIPMAndy/goskill/actions/workflows/tests.yml/badge.svg)](https://github.com/AIPMAndy/goskill/actions/workflows/tests.yml)
 
-**让 Skill 持续运行，直到目标达成。**
+</div>
 
-GoSkill 是一个目标驱动的多智能体执行框架，专为 OpenClaw 设计。它让你的 Skill 能够持续运行数小时甚至数天，自动验证进度，不达目标绝不停止。
+---
+
+GoSkill 是一个“目标驱动执行器”：你定义目标、成功标准和最长运行时间，它负责围绕这些标准持续推进任务，并在达标后停止。
+
+它更适合表达一种**执行模式**，而不是一个神奇的自动完成器。也就是说：它擅长把“做到什么才算完成”说清楚，并把任务包装成可重复检查、可持续推进的流程。
+
+---
+
+## 为什么有 GoSkill？
+
+很多 Skill 的问题不是“不会做”，而是：
+- 做一轮就停
+- 没有明确完成标准
+- 任务很长，但没有阶段性验证
+- 最后只返回一个“我做完了”，却没人知道质量到底够不够
+
+GoSkill 想解决的是这个：
+**把任务从“一次性调用”变成“围绕目标持续推进，直到满足标准”。**
 
 ---
 
@@ -79,6 +101,16 @@ result = skill.run()
 ---
 
 ## 📊 对比
+
+| 维度 | 普通函数/Skill | GoSkill |
+|------|----------------|---------|
+| 调用方式 | 执行一次 | 按目标循环推进 |
+| 结束条件 | 函数跑完 | 达到成功标准或超时 |
+| 长任务表达 | 弱 | 强 |
+| 状态追踪 | 少 | 内建 status |
+| 适合场景 | 短任务 | 长任务 / 复杂任务 / 分阶段达标任务 |
+
+---
 
 | 特性 | 普通 Skill | GoSkill |
 |------|-----------|---------|
