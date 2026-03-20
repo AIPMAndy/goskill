@@ -184,9 +184,10 @@ Better alignment = higher trust.
 ## Development
 
 ```bash
-pip install -e .[dev]
-python -m pytest tests/ -q
-python -m goskill.cli --version
+make install-dev
+make test
+make build
+make version
 ```
 
 ---
@@ -197,6 +198,8 @@ python -m goskill.cli --version
 - [CONTRIBUTING.md](CONTRIBUTING.md) — contribution guide
 - [CHANGELOG.md](CHANGELOG.md) — release notes
 - [SECURITY.md](SECURITY.md) — security notes
+- [RELEASE.md](RELEASE.md) — release process
+- [Makefile](Makefile) — common dev commands
 - [SKILL.md](SKILL.md) — OpenClaw Skill-oriented usage
 
 ---

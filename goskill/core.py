@@ -92,7 +92,9 @@ class GoSkill:
             "goal": self.goal,
             "attempts": self.attempts,
             "elapsed_hours": elapsed.total_seconds() / 3600,
-            "max_hours": self.max_hours
+            "max_hours": self.max_hours,
+            "criteria": self.criteria.criteria,
+            "last_check": self.criteria.last_report,
         }
 
 

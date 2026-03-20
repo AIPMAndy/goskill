@@ -183,9 +183,10 @@ GoSkill 现在更适合作为：
 ## 开发
 
 ```bash
-pip install -e .[dev]
-python -m pytest tests/ -q
-python -m goskill.cli --version
+make install-dev
+make test
+make build
+make version
 ```
 
 ---
@@ -196,6 +197,8 @@ python -m goskill.cli --version
 - [CONTRIBUTING.md](CONTRIBUTING.md) — 如何参与贡献
 - [CHANGELOG.md](CHANGELOG.md) — 更新记录
 - [SECURITY.md](SECURITY.md) — 安全说明
+- [RELEASE.md](RELEASE.md) — 发布流程
+- [Makefile](Makefile) — 常用开发命令
 - [SKILL.md](SKILL.md) — OpenClaw Skill 版本说明
 
 ---
