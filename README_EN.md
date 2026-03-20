@@ -108,6 +108,21 @@ print(result)
 
 ---
 
+## 🎬 Minimal runnable example
+
+A tiny demo is included in the repo:
+
+```bash
+python examples/basic_usage.py
+```
+
+It shows:
+- how to define a goal
+- how to define criteria
+- how to run and inspect status
+
+---
+
 ## Core ideas
 
 ### 1) Goal-driven
@@ -163,6 +178,20 @@ Repeat until success or timeout
 - tiny synchronous functions
 - tasks with no meaningful acceptance criteria
 - production-grade distributed orchestration systems
+
+---
+
+## Project boundaries
+
+GoSkill currently targets a **single-process, lightweight goal-driven execution loop**.
+
+It does **not** try to provide:
+- distributed orchestration
+- multi-node scheduling
+- advanced persistence recovery
+- enterprise queueing systems
+
+That boundary makes the project more trustworthy, not less.
 
 ---
 
