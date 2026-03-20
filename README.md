@@ -105,6 +105,9 @@ skill = GoSkill(
 result = skill.run(lambda: {"coverage": 95, "report": "complete"})
 print(result)
 print(skill.status)
+
+structured = skill.run_with_result(lambda: {"coverage": 95, "report": "complete"})
+print(structured)
 ```
 
 ---
@@ -125,6 +128,11 @@ python examples/basic_usage.py
 ---
 
 ## 核心能力
+
+现在库里已经有两层返回方式：
+- `run()`：返回原始任务结果
+- `run_with_result()`：返回结构化结果对象（success / status / attempts / criteria_report）
+
 
 ### 1) 目标驱动
 你不是只传一个函数，而是把任务表述成：

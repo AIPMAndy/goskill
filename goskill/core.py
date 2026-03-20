@@ -3,23 +3,26 @@
 from __future__ import annotations
 
 import time
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, Callable, Dict, Optional
 
 from .criteria import Criteria
 
 
-class GoSkill:
-    """
-    A goal-driven helper that keeps running until criteria are met.
+@dataclass
+class GoSkillResult:
+    success: bool
+    status: str
+    attempts: int
+    elapsed_hours: float
+    result: Any
+    goal: str
+    criteria_report: Dict[str, Any]
 
-    Example:
-        skill = GoSkill(
-            goal="Migrate Android to HarmonyOS",
-            criteria={"compile": "0 errors", "test": "100%"}
-        )
-        skill.run(lambda: {"compile": "0 errors", "test": "100%"})
-    """
+
+class GoSkill:
+    """A goal-driven helper that keeps running until criteria are met."""
 
     def __init__(
         self,
@@ -29,9 +32,10 @@ class GoSkill:
         check_interval_minutes: float = 5,
         max_attempts: Optional[int] = None,
         sleep_func: Callable[[float], None] = time.sleep,
+        checker: Optional[Callable[[Any, Dict[str, Any]], Dict[str, Any] | bool]] = None,
     ):
         self.goal = goal
-        self.criteria = Criteria(**criteria)
+        self.criteria = Criteria(checker=checker, **criteria)
         self.max_hours = max_hours
         self.check_interval_minutes = check_interval_minutes
         self.check_interval = check_interval_minutes * 60
@@ -42,8 +46,20 @@ class GoSkill:
         self.attempts = 0
         self.last_result: Any = None
 
+    def _build_result(self, success: bool, status: str, result: Any) -> GoSkillResult:
+        now = self.end_time or datetime.now()
+        elapsed = 0.0 if not self.start_time else (now - self.start_time).total_seconds() / 3600
+        return GoSkillResult(
+            success=success,
+            status=status,
+            attempts=self.attempts,
+            elapsed_hours=elapsed,
+            result=result,
+            goal=self.goal,
+            criteria_report=self.criteria.last_report,
+        )
+
     def run(self, task_func: Optional[Callable[[], Any]] = None) -> Any:
-        """Run until criteria are met, attempts are exhausted, or time runs out."""
         self.start_time = datetime.now()
         self.end_time = None
         print(f"🚀 GoSkill started: {self.goal}")
@@ -81,13 +97,19 @@ class GoSkill:
             print(f"⏳ Criteria not met. Retrying in {self.check_interval_minutes} minutes...")
             self.sleep_func(self.check_interval)
 
+    def run_with_result(self, task_func: Optional[Callable[[], Any]] = None) -> GoSkillResult:
+        raw = self.run(task_func)
+        if raw is not None and self.criteria.last_report.get("passed"):
+            return self._build_result(True, "success", raw)
+        if self.max_attempts is not None and self.attempts >= self.max_attempts:
+            return self._build_result(False, "max_attempts_reached", raw)
+        return self._build_result(False, "timeout", raw)
+
     def _execute(self) -> Any:
-        """Default execution logic. Override or pass task_func."""
         return {"status": "incomplete"}
 
     @property
     def status(self) -> Dict[str, Any]:
-        """Get current status snapshot."""
         if not self.start_time:
             return {"status": "not_started", "goal": self.goal, "criteria": self.criteria.criteria}
 
@@ -115,8 +137,6 @@ def goskill(
     check_interval_minutes: float = 5,
     max_attempts: Optional[int] = None,
 ):
-    """Decorator to run a function with GoSkill semantics."""
-
     def decorator(func: Callable) -> Callable:
         def wrapper(*args, **kwargs):
             skill = GoSkill(

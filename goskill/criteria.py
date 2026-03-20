@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict
+from typing import Any, Callable, Dict, Optional
 
 
 class Criteria:
     """Container for success criteria with lightweight evaluation support."""
 
-    def __init__(self, **kwargs: Any):
+    def __init__(self, checker: Optional[Callable[[Any, Dict[str, Any]], Dict[str, Any] | bool]] = None, **kwargs: Any):
         self.criteria = kwargs
+        self.checker = checker
         self.last_report: Dict[str, Any] = {}
 
     def _compare_numeric(self, actual: float, expression: str) -> bool:
@@ -36,7 +37,32 @@ class Criteria:
             return float(value) * 100 if 0 <= float(value) <= 1 else float(value)
         return float(value)
 
+    def _run_custom_checker(self, result: Any) -> Optional[bool]:
+        if not self.checker:
+            return None
+        custom = self.checker(result, self.criteria)
+        if isinstance(custom, bool):
+            self.last_report = {
+                "passed": custom,
+                "reason": "custom_checker",
+                "details": {},
+            }
+            return custom
+        if isinstance(custom, dict):
+            passed = bool(custom.get("passed", False))
+            self.last_report = {
+                "passed": passed,
+                "reason": custom.get("reason", "custom_checker"),
+                "details": custom.get("details", {}),
+            }
+            return passed
+        raise TypeError("custom checker must return bool or dict")
+
     def check(self, result: Any) -> bool:
+        custom_outcome = self._run_custom_checker(result)
+        if custom_outcome is not None:
+            return custom_outcome
+
         if result in (None, False):
             self.last_report = {"passed": False, "reason": "empty_result", "details": {}}
             return False

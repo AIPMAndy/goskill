@@ -1,7 +1,7 @@
 import io
 from contextlib import redirect_stdout
 
-from goskill import GoSkill, goskill
+from goskill import GoSkill, GoSkillResult, goskill
 from goskill.criteria import Criteria, CriteriaChecker
 from goskill.cli import main
 
@@ -21,6 +21,19 @@ def test_criteria_numeric_and_string_matching():
     assert criteria.check({"coverage": 95, "report": "complete"}) is True
     assert criteria.last_report["passed"] is True
     assert criteria.check({"coverage": 80, "report": "complete"}) is False
+
+
+def test_custom_checker_support():
+    def checker(result, criteria):
+        return {
+            "passed": result.get("score", 0) >= criteria["min_score"],
+            "reason": "custom_checker",
+            "details": {"score": result.get("score", 0)},
+        }
+
+    criteria = Criteria(checker=checker, min_score=80)
+    assert criteria.check({"score": 90}) is True
+    assert criteria.last_report["details"]["score"] == 90
 
 
 def test_goskill_status_before_run():
@@ -70,6 +83,14 @@ def test_goskill_respects_max_attempts_without_sleeping():
     assert result is None
     assert calls["count"] == 3
     assert skill.status["status"] == "completed"
+
+
+def test_run_with_result_returns_structured_result():
+    skill = GoSkill(goal="ship", criteria={"done": True}, max_hours=1)
+    result = skill.run_with_result(lambda: {"done": True})
+    assert isinstance(result, GoSkillResult)
+    assert result.success is True
+    assert result.status == "success"
 
 
 def test_cli_version_flag(monkeypatch):

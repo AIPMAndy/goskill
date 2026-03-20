@@ -105,6 +105,9 @@ skill = GoSkill(
 result = skill.run(lambda: {"coverage": 95, "report": "complete"})
 print(result)
 print(skill.status)
+
+structured = skill.run_with_result(lambda: {"coverage": 95, "report": "complete"})
+print(structured)
 ```
 
 ---
@@ -125,6 +128,11 @@ It shows:
 ---
 
 ## Core ideas
+
+The library now offers two output styles:
+- `run()` returns the raw task result
+- `run_with_result()` returns a structured result object with success/status/attempts/report
+
 
 ### 1) Goal-driven
 Instead of only passing a function, you describe the task as:
