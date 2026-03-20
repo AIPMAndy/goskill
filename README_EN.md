@@ -95,15 +95,16 @@ from goskill import GoSkill
 skill = GoSkill(
     goal="Analyze 1000 financial reports",
     criteria={
-        "coverage": "100%",
-        "accuracy": ">= 95%",
+        "coverage": ">= 90%",
         "report": "complete"
     },
     max_hours=24,
+    max_attempts=20,
 )
 
-result = skill.run(lambda: {"done": True})
+result = skill.run(lambda: {"coverage": 95, "report": "complete"})
 print(result)
+print(skill.status)
 ```
 
 ---
@@ -130,6 +131,7 @@ Instead of only passing a function, you describe the task as:
 - **goal**: what should be achieved
 - **criteria**: what counts as success
 - **max_hours**: how long it is allowed to keep trying
+- **max_attempts**: how many attempts are allowed (optional)
 
 ### 2) Persistent attempts
 If the criteria are not met, GoSkill does not assume one execution is enough.
@@ -144,6 +146,8 @@ Built-in `status` lets you inspect:
 - attempt count
 - elapsed runtime
 - max runtime
+- latest criteria check
+- latest execution result
 
 ---
 

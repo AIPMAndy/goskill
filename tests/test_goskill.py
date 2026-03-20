@@ -46,9 +46,30 @@ def test_goskill_status_after_run():
     result = skill.run(lambda: {"done": True})
     assert result == {"done": True}
     status = skill.status
-    assert status["status"] == "running"
+    assert status["status"] == "completed"
     assert status["attempts"] == 1
     assert "criteria" in status
+
+
+def test_goskill_respects_max_attempts_without_sleeping():
+    calls = {"count": 0}
+
+    def task():
+        calls["count"] += 1
+        return {"done": False}
+
+    skill = GoSkill(
+        goal="retry-demo",
+        criteria={"done": True},
+        max_hours=1,
+        max_attempts=3,
+        check_interval_minutes=0,
+        sleep_func=lambda _: None,
+    )
+    result = skill.run(task)
+    assert result is None
+    assert calls["count"] == 3
+    assert skill.status["status"] == "completed"
 
 
 def test_cli_version_flag(monkeypatch):

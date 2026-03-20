@@ -95,15 +95,16 @@ from goskill import GoSkill
 skill = GoSkill(
     goal="分析 1000 份财报",
     criteria={
-        "coverage": "100%",
-        "accuracy": ">= 95%",
+        "coverage": ">= 90%",
         "report": "complete"
     },
     max_hours=24,
+    max_attempts=20,
 )
 
-result = skill.run(lambda: {"done": True})
+result = skill.run(lambda: {"coverage": 95, "report": "complete"})
 print(result)
+print(skill.status)
 ```
 
 ---
@@ -130,6 +131,7 @@ python examples/basic_usage.py
 - **goal**：要达成什么
 - **criteria**：怎样才算完成
 - **max_hours**：最多跑多久
+- **max_attempts**：最多尝试多少次（可选）
 
 ### 2) 持续尝试
 如果没有达标，它不会默认“执行一次就结束”，而是继续推进，直到：
@@ -143,6 +145,8 @@ python examples/basic_usage.py
 - 已尝试次数
 - 已运行时长
 - 最大允许时长
+- 上一次 criteria 检查结果
+- 上一次执行结果
 
 ---
 
