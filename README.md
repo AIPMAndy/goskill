@@ -100,6 +100,7 @@ skill = GoSkill(
     },
     max_hours=24,
     max_attempts=20,
+    verbose=False,  # 可选：关闭运行日志
 )
 
 result = skill.run(lambda: {"coverage": 95, "report": "complete"})
@@ -153,6 +154,7 @@ python examples/basic_usage.py
 - 已尝试次数
 - 已运行时长
 - 最大允许时长
+- 终态原因（`terminal_status`）
 - 上一次 criteria 检查结果
 - 上一次执行结果
 
