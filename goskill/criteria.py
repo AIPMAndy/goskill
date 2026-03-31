@@ -14,12 +14,18 @@ class Criteria:
         self.checker = checker
         self.last_report: Dict[str, Any] = {}
 
-    def _compare_numeric(self, actual: float, expression: str) -> bool:
-        m = re.match(r"^\s*(>=|<=|>|<|==?)\s*([0-9]+(?:\.[0-9]+)?)\s*%?\s*$", expression)
+    def _parse_numeric_expression(self, expression: str) -> Optional[tuple[str, float, bool]]:
+        m = re.match(r"^\s*(>=|<=|>|<|==?)\s*(-?[0-9]+(?:\.[0-9]+)?)\s*(%)?\s*$", expression)
         if not m:
+            return None
+        op, raw, percent = m.groups()
+        return op, float(raw), bool(percent)
+
+    def _compare_numeric(self, actual: float, expression: str) -> bool:
+        parsed = self._parse_numeric_expression(expression)
+        if not parsed:
             return False
-        op, raw = m.groups()
-        expected = float(raw)
+        op, expected, _ = parsed
         if op == ">":
             return actual > expected
         if op == ">=":
@@ -30,11 +36,15 @@ class Criteria:
             return actual <= expected
         return actual == expected
 
-    def _normalize_percent(self, value: Any) -> float:
+    def _normalize_numeric(self, value: Any, expect_percent_scale: bool) -> float:
         if isinstance(value, str) and value.strip().endswith("%"):
-            return float(value.strip().rstrip("%"))
+            numeric = float(value.strip().rstrip("%"))
+            return numeric if expect_percent_scale else numeric / 100
         if isinstance(value, (int, float)):
-            return float(value) * 100 if 0 <= float(value) <= 1 else float(value)
+            numeric = float(value)
+            if expect_percent_scale and 0 <= numeric <= 1:
+                return numeric * 100
+            return numeric
         return float(value)
 
     def _run_custom_checker(self, result: Any) -> Optional[bool]:
@@ -72,8 +82,8 @@ class Criteria:
             return True
 
         if not isinstance(result, dict):
-            self.last_report = {"passed": True, "reason": "non_dict_result", "details": {}}
-            return True
+            self.last_report = {"passed": False, "reason": "non_dict_result", "details": {}}
+            return False
 
         details: Dict[str, Dict[str, Any]] = {}
         all_passed = True
@@ -90,7 +100,13 @@ class Criteria:
                 exp = expected.strip()
                 if exp.endswith("%") or exp.startswith((">", "<", "=")):
                     try:
-                        passed = self._compare_numeric(self._normalize_percent(actual), exp)
+                        parsed = self._parse_numeric_expression(exp)
+                        if parsed:
+                            _, _, expect_percent_scale = parsed
+                            actual_numeric = self._normalize_numeric(actual, expect_percent_scale)
+                            passed = self._compare_numeric(actual_numeric, exp)
+                        else:
+                            passed = False
                     except Exception:
                         passed = False
                 else:

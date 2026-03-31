@@ -100,6 +100,7 @@ skill = GoSkill(
     },
     max_hours=24,
     max_attempts=20,
+    verbose=False,  # optional: suppress runtime logs
 )
 
 result = skill.run(lambda: {"coverage": 95, "report": "complete"})
@@ -154,6 +155,7 @@ Built-in `status` lets you inspect:
 - attempt count
 - elapsed runtime
 - max runtime
+- terminal reason (`terminal_status`)
 - latest criteria check
 - latest execution result
 
