@@ -238,7 +238,7 @@ make version
 ## Related docs
 
 - [README.md](README.md) — Chinese version
-- [CONTRIBUTING.md](CONTRIBUTING.md) — contribution guide
+- **[CONTRIBUTING.md](CONTRIBUTING.md) — contribution guide**
 - [CHANGELOG.md](CHANGELOG.md) — release notes
 - [SECURITY.md](SECURITY.md) — security notes
 - [RELEASE.md](RELEASE.md) — release process
