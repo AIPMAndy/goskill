@@ -237,7 +237,7 @@ make version
 ## 相关文档
 
 - [README_EN.md](README_EN.md) — English version
-- [CONTRIBUTING.md](CONTRIBUTING.md) — 如何参与贡献
+- **[CONTRIBUTING.md](CONTRIBUTING.md) — 如何参与贡献**
 - [CHANGELOG.md](CHANGELOG.md) — 更新记录
 - [SECURITY.md](SECURITY.md) — 安全说明
 - [RELEASE.md](RELEASE.md) — 发布流程
