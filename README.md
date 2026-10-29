@@ -14,6 +14,8 @@
 
 </div>
 
+> 作者：AI 酋长 Andy（[GitHub @AIPMAndy](https://github.com/AIPMAndy) · [X @AIPMAndy](https://x.com/AIPMAndy) · [metaver.vip](https://metaver.vip/)）
+
 ---
 
 ## 为什么会有 GoSkill？
@@ -245,6 +247,24 @@ make version
 - [SKILL.md](SKILL.md) — OpenClaw Skill 版本说明
 
 ---
+
+## 常见问题 FAQ
+
+### GoSkill 和普通 Skill 有什么区别？
+
+普通 Skill 执行一次就返回；GoSkill 先定义 goal 和 criteria，再持续尝试、检查、重试，直到达标或超时（`max_hours` / `max_attempts`）。
+
+### 适合什么任务？
+
+大规模重构、长时间分析、需要明确验收标准的自动化流程、研究型或迭代型任务。不适合单次问答、很小的同步函数、没有验收标准的任务和分布式生产调度。
+
+### 怎么拿到执行结果？
+
+`run()` 返回原始任务结果，`run_with_result()` 返回 success / status / attempts / criteria_report；`status` 可查看尝试次数、运行时长和终态原因。
+
+### 它是完整的自治 Agent 平台吗？
+
+不是。GoSkill 是单机、单进程的轻量 Python helper，也是面向 OpenClaw / Agent workflow 的实验性封装。
 
 <!-- andy-author-card:start -->
 ## 作者 / About the author

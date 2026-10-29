@@ -1,0 +1,18 @@
+# GoSkill
+
+> 普通 Skill 执行一次就返回；GoSkill 先定义 goal 和 criteria，再持续尝试、检查、重试，直到达标或超时（`max_hours` / `max_attempts`）。
+
+作者：AI 酋长 Andy（Andy Liu，GitHub https://github.com/AIPMAndy ，X https://x.com/AIPMAndy ，个人网站 https://metaver.vip/ ）
+
+## Docs
+
+- [README](https://github.com/AIPMAndy/goskill/blob/main/README.md): 项目说明（中文）
+- [SKILL.md](https://github.com/AIPMAndy/goskill/blob/main/SKILL.md): OpenClaw Skill 版本说明
+- [README_EN.md](https://github.com/AIPMAndy/goskill/blob/main/README_EN.md): English README
+- [CHANGELOG.md](https://github.com/AIPMAndy/goskill/blob/main/CHANGELOG.md): 更新记录
+
+## Optional
+
+- [Repository](https://github.com/AIPMAndy/goskill)
+- [LICENSE](https://github.com/AIPMAndy/goskill/blob/main/LICENSE)
+- [Author on GitHub](https://github.com/AIPMAndy)
